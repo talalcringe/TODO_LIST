@@ -1,17 +1,14 @@
-import { useQuery, useMutation, useQueryClient } from 'react-query';
-import { getTasks, addTask, updateTask, deleteTask } from '../api/tasksAPI';
+import { useQuery } from 'react-query';
+import { getTasks } from '../api/tasksAPI';
+
+import TaskCard from './TaskCard';
 
 type Task = {
-  id?: number;
+  _id: number;
   title: string;
   description: string;
   completed: boolean;
 };
-
-// type TasksProps = {
-//   fetchAllTasks: () => Task;
-//   tasks: Task[];
-// };
 
 function Tasks() {
   const tasksQuery = useQuery<Task[], Error>({
@@ -25,23 +22,9 @@ function Tasks() {
     <div>Error - {tasksQuery.error.message}</div>
   ) : tasksQuery.data ? (
     tasksQuery.data.map((data) => {
-      return (
-        <div key={data.id}>
-          <h3>{data.title}</h3>
-          <p>{data.description}</p>
-          <p>Completed - {data.completed.toString()}</p>
-        </div>
-      );
+      return <TaskCard key={data._id} {...data} />;
     })
   ) : null;
-  // <div>
-  //   {/* {data?.map((task) => (
-  //     <div key={task.id}>
-  //       <h3>{task.title}</h3>
-  //       <p>{task.description}</p>
-  //     </div>
-  //   ))} */}
-  // </div>
 }
 
 export default Tasks;

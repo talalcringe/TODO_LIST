@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 type Task = {
-  id?: number;
+  _id?: number;
   title: string;
   description: string;
   completed?: boolean;
@@ -17,17 +17,17 @@ const getTasks = async () => {
 };
 
 const addTask = async (task: Task) => {
-  const response = await tasksAPI.post('/tasks', task);
+  const response = await tasksAPI.post('/task', task);
   return response.data;
 };
 
 const updateTask = async (task: Task) => {
-  const response = await tasksAPI.patch(`/tasks/${task.id}`, task);
+  const response = await tasksAPI.patch(`/task/${task._id}`, task);
   return response.data;
 };
 
 const deleteTask = async (task: Task) => {
-  const response = await tasksAPI.delete(`/tasks/${task.id}`);
+  const response = await tasksAPI.delete(`/task/${task._id}`);
   return response.data;
 };
 
