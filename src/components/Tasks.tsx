@@ -3,6 +3,8 @@ import { getTasks } from '../api/tasksAPI';
 
 import TaskCard from './TaskCard';
 
+import CircularProgress from '@mui/material/CircularProgress';
+
 type Task = {
   _id: number;
   title: string;
@@ -17,7 +19,7 @@ function Tasks() {
   });
 
   return tasksQuery.isLoading ? (
-    <div>Loading...</div>
+    <CircularProgress variant='indeterminate' />
   ) : tasksQuery.isError ? (
     <div>Error - {tasksQuery.error.message}</div>
   ) : tasksQuery.data ? (

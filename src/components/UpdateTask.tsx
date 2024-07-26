@@ -1,7 +1,10 @@
 import { useMutation, useQueryClient } from 'react-query';
 import { updateTask } from '../api/tasksAPI';
-
 import { useState } from 'react';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 type Task = {
   _id: number;
@@ -52,37 +55,53 @@ function UpdateTask({
   function updateNewTask(value: Task) {
     setNewTask(value);
   }
+
   return (
     <>
-      <form onSubmit={handleSubmit}>
-        <label htmlFor='newTaskTitle'>Enter a new task</label>
-        <label htmlFor='newTaskDescription'></label>
-        <div>
-          <input
-            type='text'
-            id='newTaskTitle'
-            value={newTask?.title}
-            onChange={(e) =>
-              updateNewTask({ ...newTask, title: e.target.value })
-            }
-            placeholder='Title'
-          />
-        </div>
-        <div>
-          <textarea
-            id='newTaskDescription'
-            value={newTask?.description}
-            onChange={(e) =>
-              updateNewTask({ ...newTask, description: e.target.value })
-            }
-            placeholder='Enter a new task'
-          />
-        </div>
-        <br />
-        <button disabled={updateTaskMutation.isLoading} type='submit'>
-          Save
-        </button>
-      </form>
+      <Box component='form' onSubmit={handleSubmit}>
+        <Typography variant='h6' mb={1}>
+          Update the task
+        </Typography>
+        <TextField
+          label='Title'
+          id='newTaskTitle'
+          value={newTask?.title}
+          onChange={(e) => updateNewTask({ ...newTask, title: e.target.value })}
+          placeholder='Title'
+          fullWidth
+        />
+        <TextField
+          label='Description'
+          id='newTaskDescription'
+          value={newTask?.description}
+          onChange={(e) =>
+            updateNewTask({ ...newTask, description: e.target.value })
+          }
+          placeholder='Enter a new task'
+          multiline
+          rows={4}
+          fullWidth
+          margin='normal'
+        />
+        <Box display={'flex'} justifyContent={'space-between'} mt={1}>
+          <Button
+            variant='contained'
+            color='primary'
+            type='submit'
+            disabled={updateTaskMutation.isLoading}
+          >
+            Save
+          </Button>
+          <Button
+            variant='contained'
+            color='error'
+            type='button'
+            onClick={toggleUpdatingTask}
+          >
+            Cancel
+          </Button>
+        </Box>
+      </Box>
     </>
   );
 }
