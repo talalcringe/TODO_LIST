@@ -26,8 +26,8 @@ const updateTask = async (task: Task) => {
   return response.data;
 };
 
-const deleteTask = async (task: Task) => {
-  const response = await tasksAPI.delete(`/task/${task._id}`);
+const deleteTask = async (_id: number) => {
+  const response = await tasksAPI.delete(`/task/${_id}`);
   return response.data;
 };
 

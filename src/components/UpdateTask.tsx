@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from 'react-query';
 import { updateTask } from '../api/tasksAPI';
 import { useState } from 'react';
+
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
@@ -49,7 +50,6 @@ function UpdateTask({
       description: '',
       completed: false,
     });
-    toggleUpdatingTask();
   }
 
   function updateNewTask(value: Task) {
@@ -59,7 +59,7 @@ function UpdateTask({
   return (
     <>
       <Box component='form' onSubmit={handleSubmit}>
-        <Typography variant='h6' mb={1}>
+        <Typography variant='h6' m={2}>
           Update the task
         </Typography>
         <TextField
@@ -86,19 +86,19 @@ function UpdateTask({
         <Box display={'flex'} justifyContent={'space-between'} mt={1}>
           <Button
             variant='contained'
-            color='primary'
-            type='submit'
-            disabled={updateTaskMutation.isLoading}
-          >
-            Save
-          </Button>
-          <Button
-            variant='contained'
             color='error'
             type='button'
             onClick={toggleUpdatingTask}
           >
             Cancel
+          </Button>
+          <Button
+            variant='contained'
+            color='primary'
+            type='submit'
+            disabled={updateTaskMutation.isLoading}
+          >
+            Save
           </Button>
         </Box>
       </Box>

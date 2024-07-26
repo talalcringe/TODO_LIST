@@ -5,12 +5,9 @@ import { useState } from 'react';
 
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Fab from '@mui/material/Fab';
-import AddIcon from '@mui/icons-material/Add';
 import { blue } from '@mui/material/colors';
-import Divider from '@mui/material/Divider';
 
 function App() {
   const [creatingTask, setCreatingTask] = useState(false);

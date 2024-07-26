@@ -69,19 +69,19 @@ function CreateTask({ toggleCreatingTask }: CreateTaskProps) {
         <Box display={'flex'} justifyContent={'space-between'} mt={1}>
           <Button
             variant='contained'
-            color='primary'
-            type='submit'
-            disabled={addTaskMutation.isLoading}
-          >
-            Save
-          </Button>
-          <Button
-            variant='contained'
             color='error'
             type='button'
             onClick={toggleCreatingTask}
           >
             Cancel
+          </Button>
+          <Button
+            variant='contained'
+            color='primary'
+            type='submit'
+            disabled={addTaskMutation.isLoading}
+          >
+            Save
           </Button>
         </Box>
       </Box>
