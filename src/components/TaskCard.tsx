@@ -85,7 +85,6 @@ function TaskCard({ _id, title, description, completed, recording }: Task) {
               </Typography>
             </CardContent>
             <CardActions>
-              
               <Box display={'flex'} flexDirection={'column'} width={'100%'}>
                 {recording && (
                   <Box mb={2}>
@@ -93,51 +92,53 @@ function TaskCard({ _id, title, description, completed, recording }: Task) {
                   </Box>
                 )}
 
-              <Box
-                width={'100%'}
-                display={'flex'}
-                alignItems={'center'}
-                justifyContent={'space-between'}
-              >
-                <Box>
-                  <Tooltip title='Delete'>
-                    <Fab
-                      size='small'
-                      color='error'
-                      sx={{ mr: 1 }}
-                      onClick={() => setDialogOpen(true)}
-                    >
-                      <DeleteRoundedIcon />
-                    </Fab>
-                  </Tooltip>
-                  <Tooltip title='Edit'>
-                    <Fab
-                      size='small'
-                      color='success'
-                      onClick={toggleUpdatingTask}
-                    >
-                      <EditRoundedIcon />
-                    </Fab>
-                  </Tooltip>
-                </Box>
-                <Box display={'flex'} alignItems={'center'}>
-                  <Typography variant='body2'>
-                    {checked ? 'Completed' : 'In Progress'}
-                    <Tooltip
-                      title={
-                        checked ? 'Mark as Incomplete' : 'Mark as Complete'
-                      }
-                    >
-                      <Checkbox
-                        onChange={(e) => {
-                          handleCheckboxChange(e.target.checked);
-                        }}
-
-                        checked={cchecked}
-                        disabled={updateTaskMutation.isLoading}
-                      />
+                <Box
+                  width={'100%'}
+                  display={'flex'}
+                  alignItems={'center'}
+                  justifyContent={'space-between'}
+                >
+                  <Box>
+                    <Tooltip title='Delete'>
+                      <Fab
+                        size='small'
+                        color='error'
+                        sx={{ mr: 1, zIndex: 1 }}
+                        onClick={() => setDialogOpen(true)}
+                      >
+                        <DeleteRoundedIcon />
+                      </Fab>
                     </Tooltip>
-                  </Typography>
+                    <Tooltip title='Edit'>
+                      <Fab
+                        size='small'
+                        color='success'
+                        sx={{ zIndex: 1 }}
+                        onClick={toggleUpdatingTask}
+                      >
+                        <EditRoundedIcon />
+                      </Fab>
+                    </Tooltip>
+                  </Box>
+
+                  <Box display={'flex'} alignItems={'center'}>
+                    <Typography variant='body2'>
+                      {checked ? 'Completed' : 'In Progress'}
+                      <Tooltip
+                        title={
+                          checked ? 'Mark as Incomplete' : 'Mark as Complete'
+                        }
+                      >
+                        <Checkbox
+                          onChange={(e) => {
+                            handleCheckboxChange(e.target.checked);
+                          }}
+                          checked={checked}
+                          disabled={updateTaskMutation.isLoading}
+                        />
+                      </Tooltip>
+                    </Typography>
+                  </Box>
                 </Box>
               </Box>
             </CardActions>
