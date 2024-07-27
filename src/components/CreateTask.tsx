@@ -1,6 +1,9 @@
 import { useMutation, useQueryClient } from 'react-query';
 import { addTask } from '../api/tasksAPI';
 
+import { storage } from '../api/firebase';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+
 import VoiceRecorder from './VoiceRecorder';
 
 import { useState } from 'react';
@@ -37,11 +40,33 @@ function CreateTask({ toggleCreatingTask }: CreateTaskProps) {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    console.log('recordingUrl', recordingUrl);
-    addTaskMutation.mutate({ ...newTask, recording: recordingUrl });
-    setNewTask({ title: '', description: '' });
-    setRecordingUrl(undefined); // Clear recording URL
-    toggleCreatingTask();
+
+    if (recordingUrl) {
+      fetch(recordingUrl)
+        .then((response) => response.blob())
+        .then((blob) => {
+          const storageRef = ref(storage, `audio/${Date.now()}.mp3`);
+          uploadBytes(storageRef, blob)
+            .then((snapshot) => {
+              getDownloadURL(snapshot.ref).then((downloadURL) => {
+                console.log('File available at', downloadURL);
+                addTaskMutation.mutate({
+                  ...newTask,
+                  recording: downloadURL,
+                });
+                setNewTask({ title: '', description: '' });
+                setRecordingUrl(undefined); // Clear recording URL
+                toggleCreatingTask();
+              });
+            })
+            .catch((error) => console.error('Error uploading file:', error));
+        })
+        .catch((error) => console.error('Error fetching Blob:', error));
+    } else {
+      addTaskMutation.mutate({ ...newTask });
+      setNewTask({ title: '', description: '' });
+      toggleCreatingTask();
+    }
   }
 
   function updateNewTask(value: Task) {
