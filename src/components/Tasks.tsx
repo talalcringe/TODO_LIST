@@ -10,6 +10,7 @@ type Task = {
   title: string;
   description: string;
   completed: boolean;
+  recording?: string;
 };
 
 function Tasks() {

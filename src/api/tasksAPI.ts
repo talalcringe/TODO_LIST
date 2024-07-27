@@ -17,17 +17,17 @@ const getTasks = async () => {
 };
 
 const addTask = async (task: Task) => {
-  const response = await tasksAPI.post('/task', task);
+  const response = await tasksAPI.post('/tasks', task);
   return response.data;
 };
 
 const updateTask = async (task: Task) => {
-  const response = await tasksAPI.patch(`/task/${task._id}`, task);
+  const response = await tasksAPI.patch(`/tasks/${task._id}`, task);
   return response.data;
 };
 
 const deleteTask = async (_id: number) => {
-  const response = await tasksAPI.delete(`/task/${_id}`);
+  const response = await tasksAPI.delete(`/tasks/${_id}`);
   return response.data;
 };
 
