@@ -1,6 +1,8 @@
 import { useMutation, useQueryClient } from 'react-query';
 import { addTask } from '../api/tasksAPI';
 
+import VoiceRecorder from './VoiceRecorder';
+
 import { useState } from 'react';
 
 import Box from '@mui/material/Box';
@@ -13,6 +15,7 @@ type Task = {
   title: string;
   description: string;
   completed?: boolean;
+  recording?: string;
 };
 
 type CreateTaskProps = {
@@ -21,6 +24,7 @@ type CreateTaskProps = {
 
 function CreateTask({ toggleCreatingTask }: CreateTaskProps) {
   const [newTask, setNewTask] = useState<Task>({ title: '', description: '' });
+  const [recordingUrl, setRecordingUrl] = useState<string | undefined>();
 
   const queryClient = useQueryClient();
 
@@ -33,14 +37,21 @@ function CreateTask({ toggleCreatingTask }: CreateTaskProps) {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    addTaskMutation.mutate(newTask);
+    console.log('recordingUrl', recordingUrl);
+    addTaskMutation.mutate({ ...newTask, recording: recordingUrl });
     setNewTask({ title: '', description: '' });
+    setRecordingUrl(undefined); // Clear recording URL
     toggleCreatingTask();
   }
 
   function updateNewTask(value: Task) {
     setNewTask(value);
   }
+
+  function handleRecordingComplete(url: string) {
+    setRecordingUrl(url);
+  }
+
   return (
     <>
       <Box component='form' onSubmit={handleSubmit}>
@@ -66,6 +77,9 @@ function CreateTask({ toggleCreatingTask }: CreateTaskProps) {
           fullWidth
           margin='normal'
         />
+        <Box mt={2}>
+          <VoiceRecorder onRecordingComplete={handleRecordingComplete} />
+        </Box>
         <Box display={'flex'} justifyContent={'space-between'} mt={1}>
           <Button
             variant='contained'

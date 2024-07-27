@@ -1,7 +1,6 @@
+import { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { deleteTask, updateTask } from '../api/tasksAPI';
-
-import { useState } from 'react';
 import UpdateTask from './UpdateTask';
 import DeleteDialog from './DeleteDialog';
 
@@ -14,6 +13,7 @@ import Box from '@mui/material/Box';
 import Fab from '@mui/material/Fab';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+import CardMedia from '@mui/material/CardMedia';
 import Tooltip from '@mui/material/Tooltip';
 
 type Task = {
@@ -24,7 +24,7 @@ type Task = {
   recording?: string;
 };
 
-function TaskCard({ _id, title, description, completed }: Task) {
+function TaskCard({ _id, title, description, completed, recording }: Task) {
   const [updatingTask, setUpdatingTask] = useState(false);
   const [checked, setChecked] = useState(completed);
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -52,6 +52,7 @@ function TaskCard({ _id, title, description, completed }: Task) {
       title,
       description,
       completed: val,
+      recording, // Ensure recording URL is included
     });
   }
 
@@ -84,6 +85,14 @@ function TaskCard({ _id, title, description, completed }: Task) {
               </Typography>
             </CardContent>
             <CardActions>
+              
+              <Box display={'flex'} flexDirection={'column'} width={'100%'}>
+                {recording && (
+                  <Box mb={2}>
+                    <CardMedia component='audio' src={recording} controls />
+                  </Box>
+                )}
+
               <Box
                 width={'100%'}
                 display={'flex'}
@@ -104,7 +113,7 @@ function TaskCard({ _id, title, description, completed }: Task) {
                   <Tooltip title='Edit'>
                     <Fab
                       size='small'
-                      color='primary'
+                      color='success'
                       onClick={toggleUpdatingTask}
                     >
                       <EditRoundedIcon />
@@ -123,7 +132,8 @@ function TaskCard({ _id, title, description, completed }: Task) {
                         onChange={(e) => {
                           handleCheckboxChange(e.target.checked);
                         }}
-                        checked={completed}
+
+                        checked={cchecked}
                         disabled={updateTaskMutation.isLoading}
                       />
                     </Tooltip>
