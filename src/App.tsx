@@ -3,6 +3,7 @@ import CreateTask from './components/CreateTask';
 
 import { useState } from 'react';
 
+import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
@@ -20,20 +21,34 @@ function App() {
     <>
       <Box
         display='flex'
+        height={'100vh'}
+        gap={2}
         flexDirection='column'
-        justifyContent='center'
+        justifyContent='start'
         alignItems='center'
+        position='relative'
       >
-        <Typography variant='h3' align='center'>
-          TODOList
-        </Typography>
+        <Box
+          position='fixed'
+          width={'100%'}
+          height={'56px'}
+          zIndex={10}
+          top={'0px'}
+          bgcolor={'white'}
+        >
+          <Typography variant='h3' align='center'>
+            TODOList
+          </Typography>
+          <Box width='100%'>
+            <Divider />
+          </Box>
+        </Box>
 
-        <Box mt={2}>
+        <Box mt={'72px'}>
           <TextField size='small' label='Filter' />
         </Box>
 
         <Box
-          mt={2}
           display='flex'
           flexDirection='column'
           justifyContent='center'

@@ -3,6 +3,7 @@ import { deleteTask, updateTask } from '../api/tasksAPI';
 
 import { useState } from 'react';
 import UpdateTask from './UpdateTask';
+import DeleteDialog from './DeleteDialog';
 
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -13,17 +14,20 @@ import Box from '@mui/material/Box';
 import Fab from '@mui/material/Fab';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+import Tooltip from '@mui/material/Tooltip';
 
 type Task = {
   _id: number;
   title: string;
   description: string;
   completed: boolean;
+  recording?: string;
 };
 
 function TaskCard({ _id, title, description, completed }: Task) {
   const [updatingTask, setUpdatingTask] = useState(false);
   const [checked, setChecked] = useState(completed);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -53,6 +57,7 @@ function TaskCard({ _id, title, description, completed }: Task) {
 
   function handleDeleteTask() {
     deleteTaskMutation.mutate(_id);
+    setDialogOpen(false);
   }
 
   function toggleUpdatingTask() {
@@ -86,32 +91,42 @@ function TaskCard({ _id, title, description, completed }: Task) {
                 justifyContent={'space-between'}
               >
                 <Box>
-                  <Fab
-                    size='small'
-                    color='error'
-                    sx={{ mr: 1 }}
-                    onClick={handleDeleteTask}
-                  >
-                    <DeleteRoundedIcon />
-                  </Fab>
-                  <Fab
-                    size='small'
-                    color='primary'
-                    onClick={toggleUpdatingTask}
-                  >
-                    <EditRoundedIcon />
-                  </Fab>
+                  <Tooltip title='Delete'>
+                    <Fab
+                      size='small'
+                      color='error'
+                      sx={{ mr: 1 }}
+                      onClick={() => setDialogOpen(true)}
+                    >
+                      <DeleteRoundedIcon />
+                    </Fab>
+                  </Tooltip>
+                  <Tooltip title='Edit'>
+                    <Fab
+                      size='small'
+                      color='primary'
+                      onClick={toggleUpdatingTask}
+                    >
+                      <EditRoundedIcon />
+                    </Fab>
+                  </Tooltip>
                 </Box>
                 <Box display={'flex'} alignItems={'center'}>
                   <Typography variant='body2'>
                     {checked ? 'Completed' : 'In Progress'}
-                    <Checkbox
-                      onChange={(e) => {
-                        handleCheckboxChange(e.target.checked);
-                      }}
-                      checked={completed}
-                      disabled={updateTaskMutation.isLoading}
-                    />
+                    <Tooltip
+                      title={
+                        checked ? 'Mark as Incomplete' : 'Mark as Complete'
+                      }
+                    >
+                      <Checkbox
+                        onChange={(e) => {
+                          handleCheckboxChange(e.target.checked);
+                        }}
+                        checked={completed}
+                        disabled={updateTaskMutation.isLoading}
+                      />
+                    </Tooltip>
                   </Typography>
                 </Box>
               </Box>
@@ -119,6 +134,11 @@ function TaskCard({ _id, title, description, completed }: Task) {
           </Card>
         </Box>
       )}
+      <DeleteDialog
+        open={dialogOpen}
+        handleClose={() => setDialogOpen(false)}
+        handleDelete={handleDeleteTask}
+      />
     </>
   );
 }
