@@ -45,7 +45,7 @@ function Tasks() {
       <Box mt={'72px'}>
         <TextField
           size='small'
-          label='filter'
+          label='Filter'
           value={filter}
           onChange={updateFilter}
         />

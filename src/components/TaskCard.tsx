@@ -1,8 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { deleteTask, updateTask } from '../api/tasksAPI';
 import UpdateTask from './UpdateTask';
 import DeleteDialog from './DeleteDialog';
+import { storage } from '../api/firebase';
+import { ref, getDownloadURL, deleteObject } from 'firebase/storage';
 
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -28,6 +30,7 @@ function TaskCard({ _id, title, description, completed, recording }: Task) {
   const [updatingTask, setUpdatingTask] = useState(false);
   const [checked, setChecked] = useState(completed);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [audioUrl, setAudioUrl] = useState<string | null>(null);
 
   const queryClient = useQueryClient();
 
@@ -56,7 +59,15 @@ function TaskCard({ _id, title, description, completed, recording }: Task) {
     });
   }
 
-  function handleDeleteTask() {
+  async function handleDeleteTask() {
+    if (recording) {
+      try {
+        const audioRef = ref(storage, recording);
+        await deleteObject(audioRef);
+      } catch (error) {
+        console.error('Error deleting audio file:', error);
+      }
+    }
     deleteTaskMutation.mutate(_id);
     setDialogOpen(false);
   }
@@ -64,6 +75,22 @@ function TaskCard({ _id, title, description, completed, recording }: Task) {
   function toggleUpdatingTask() {
     setUpdatingTask((prev) => !prev);
   }
+
+  // Fetch the audio URL from Firebase Storage
+  useEffect(() => {
+    if (recording) {
+      const fetchAudioUrl = async () => {
+        try {
+          const audioRef = ref(storage, recording);
+          const url = await getDownloadURL(audioRef);
+          setAudioUrl(url);
+        } catch (error) {
+          console.error('Error fetching audio URL:', error);
+        }
+      };
+      fetchAudioUrl();
+    }
+  }, [recording]);
 
   return (
     <>
@@ -86,9 +113,9 @@ function TaskCard({ _id, title, description, completed, recording }: Task) {
             </CardContent>
             <CardActions>
               <Box display={'flex'} flexDirection={'column'} width={'100%'}>
-                {recording && (
+                {audioUrl && (
                   <Box mb={2}>
-                    <CardMedia component='audio' src={recording} controls />
+                    <CardMedia component='audio' src={audioUrl} controls />
                   </Box>
                 )}
 
