@@ -1,5 +1,7 @@
 import { useMutation, useQueryClient } from 'react-query';
 import { updateTask } from '../api/tasksAPI';
+import VoiceRecorder from './VoiceRecorder';
+
 import { useState } from 'react';
 
 import Box from '@mui/material/Box';
@@ -12,6 +14,7 @@ type Task = {
   title: string;
   description: string;
   completed: boolean;
+  recording?: string;
 };
 
 type UpdateTaskProps = {
@@ -24,18 +27,24 @@ function UpdateTask({
   title,
   description,
   completed,
+  recording,
 }: UpdateTaskProps & Task) {
   const [newTask, setNewTask] = useState<Task>({
     _id: _id,
     title: title,
     description: description,
     completed: completed,
+    recording: recording || '', // Ensure the recording URL is included
   });
+
+  const [recordingUrl, setRecordingUrl] = useState<string | undefined>(
+    recording
+  );
 
   const queryClient = useQueryClient();
 
   const updateTaskMutation = useMutation({
-    mutationFn: (newTask: Task) => updateTask(newTask),
+    mutationFn: (updatedTask: Task) => updateTask(updatedTask),
     onSuccess: () => {
       queryClient.invalidateQueries('tasks');
     },
@@ -43,17 +52,25 @@ function UpdateTask({
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    updateTaskMutation.mutate(newTask);
-    setNewTask({
-      _id: 0,
-      title: '',
-      description: '',
-      completed: false,
+
+    console.log('recordingUrl', recordingUrl);
+    updateTaskMutation.mutate({
+      ...newTask,
+      recording: recordingUrl, // Include the recording URL in the update
     });
+    toggleUpdatingTask();
   }
 
-  function updateNewTask(value: Task) {
-    setNewTask(value);
+  function updateNewTask(value: Partial<Task>) {
+    setNewTask((prev) => ({
+      ...prev,
+      ...value,
+    }));
+  }
+
+  function handleRecordingComplete(url: string) {
+    setRecordingUrl(url); // Update the recording URL state
+    updateNewTask({ recording: url }); // Update task state with the new recording URL
   }
 
   return (
@@ -65,24 +82,25 @@ function UpdateTask({
         <TextField
           label='Title'
           id='newTaskTitle'
-          value={newTask?.title}
-          onChange={(e) => updateNewTask({ ...newTask, title: e.target.value })}
+          value={newTask.title}
+          onChange={(e) => updateNewTask({ title: e.target.value })}
           placeholder='Title'
           fullWidth
         />
         <TextField
           label='Description'
           id='newTaskDescription'
-          value={newTask?.description}
-          onChange={(e) =>
-            updateNewTask({ ...newTask, description: e.target.value })
-          }
+          value={newTask.description}
+          onChange={(e) => updateNewTask({ description: e.target.value })}
           placeholder='Enter a new task'
           multiline
           rows={4}
           fullWidth
           margin='normal'
         />
+        <Box mt={2}>
+          <VoiceRecorder onRecordingComplete={handleRecordingComplete} />
+        </Box>
         <Box display={'flex'} justifyContent={'space-between'} mt={1}>
           <Button
             variant='contained'

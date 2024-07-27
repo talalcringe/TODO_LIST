@@ -1,7 +1,6 @@
+import { useState } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { deleteTask, updateTask } from '../api/tasksAPI';
-
-import { useState } from 'react';
 import UpdateTask from './UpdateTask';
 
 import Card from '@mui/material/Card';
@@ -13,15 +12,17 @@ import Box from '@mui/material/Box';
 import Fab from '@mui/material/Fab';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
+import CardMedia from '@mui/material/CardMedia'; // For audio playback
 
 type Task = {
   _id: number;
   title: string;
   description: string;
   completed: boolean;
+  recording?: string; // Add recording URL field
 };
 
-function TaskCard({ _id, title, description, completed }: Task) {
+function TaskCard({ _id, title, description, completed, recording }: Task) {
   const [updatingTask, setUpdatingTask] = useState(false);
   const [checked, setChecked] = useState(completed);
 
@@ -48,6 +49,7 @@ function TaskCard({ _id, title, description, completed }: Task) {
       title,
       description,
       completed: val,
+      recording, // Ensure recording URL is included
     });
   }
 
@@ -79,40 +81,48 @@ function TaskCard({ _id, title, description, completed }: Task) {
               </Typography>
             </CardContent>
             <CardActions>
-              <Box
-                width={'100%'}
-                display={'flex'}
-                alignItems={'center'}
-                justifyContent={'space-between'}
-              >
-                <Box>
-                  <Fab
-                    size='small'
-                    color='error'
-                    sx={{ mr: 1 }}
-                    onClick={handleDeleteTask}
-                  >
-                    <DeleteRoundedIcon />
-                  </Fab>
-                  <Fab
-                    size='small'
-                    color='primary'
-                    onClick={toggleUpdatingTask}
-                  >
-                    <EditRoundedIcon />
-                  </Fab>
-                </Box>
-                <Box display={'flex'} alignItems={'center'}>
-                  <Typography variant='body2'>
-                    {checked ? 'Completed' : 'In Progress'}
-                    <Checkbox
-                      onChange={(e) => {
-                        handleCheckboxChange(e.target.checked);
-                      }}
-                      checked={completed}
-                      disabled={updateTaskMutation.isLoading}
-                    />
-                  </Typography>
+              <Box display={'flex'} flexDirection={'column'} width={'100%'}>
+                {recording && (
+                  <Box mb={2}>
+                    <CardMedia component='audio' src={recording} controls />
+                  </Box>
+                )}
+                <Box
+                  width={'100%'}
+                  display={'flex'}
+                  alignItems={'center'}
+                  justifyContent={'space-between'}
+                >
+                  <Box>
+                    <Fab
+                      size='small'
+                      color='error'
+                      sx={{ mr: 1 }}
+                      onClick={handleDeleteTask}
+                    >
+                      <DeleteRoundedIcon />
+                    </Fab>
+                    <Fab
+                      size='small'
+                      color='success'
+                      onClick={toggleUpdatingTask}
+                    >
+                      <EditRoundedIcon />
+                    </Fab>
+                  </Box>
+
+                  <Box display={'flex'} alignItems={'center'}>
+                    <Typography variant='body2'>
+                      {checked ? 'Completed' : 'In Progress'}
+                      <Checkbox
+                        onChange={(e) => {
+                          handleCheckboxChange(e.target.checked);
+                        }}
+                        checked={checked}
+                        disabled={updateTaskMutation.isLoading}
+                      />
+                    </Typography>
+                  </Box>
                 </Box>
               </Box>
             </CardActions>
