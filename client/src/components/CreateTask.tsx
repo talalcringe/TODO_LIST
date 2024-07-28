@@ -7,12 +7,12 @@ import { useState } from 'react';
 import Modal from '@mui/material/Modal';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
+import AlertMessage from './AlertMessage';
 import Backdrop from '@mui/material/Backdrop';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+
 import Box from '@mui/material/Box';
-import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
 
 type Task = {
   _id?: number;
@@ -24,13 +24,21 @@ type Task = {
 
 type CreateTaskProps = {
   open: boolean;
+  updateShowAlert: (
+    value: [boolean, string, 'success' | 'error' | 'info' | 'warning']
+  ) => void;
   toggleCreatingTask: () => void;
 };
 
-function CreateTask({ open, toggleCreatingTask }: CreateTaskProps) {
+function CreateTask({
+  open,
+  updateShowAlert,
+  toggleCreatingTask,
+}: CreateTaskProps) {
   const [newTask, setNewTask] = useState<Task>({ title: '', description: '' });
   const [recordingUrl, setRecordingUrl] = useState<string | undefined>();
-  const [showAlert, setShowAlert] = useState(false);
+  const [recordingStatus, setRecordingStatus] = useState(false);
+  const [creating, setCreating] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -46,18 +54,24 @@ function CreateTask({ open, toggleCreatingTask }: CreateTaskProps) {
     e.preventDefault();
 
     if (!newTask.title || !newTask.description) {
-      setShowAlert(true);
+      updateShowAlert([true, 'Please enter title and description', 'error']);
+      return;
+    }
+
+    if (recordingStatus) {
+      updateShowAlert([true, 'Please stop recording', 'error']);
       return;
     }
 
     try {
       if (recordingUrl) {
+        setCreating(true);
         const response = await fetch(recordingUrl);
         const blob = await response.blob();
         const storageRef = ref(storage, `audio/${Date.now()}.mp3`);
         const snapshot = await uploadBytes(storageRef, blob);
         const downloadURL = await getDownloadURL(snapshot.ref);
-
+        setCreating(false);
         await addTaskMutation.mutateAsync({
           ...newTask,
           recording: downloadURL,
@@ -66,10 +80,12 @@ function CreateTask({ open, toggleCreatingTask }: CreateTaskProps) {
         await addTaskMutation.mutateAsync(newTask);
       }
 
-      setNewTask({ title: '', description: '' });
-      setRecordingUrl(undefined); // Clear recording URL
+      setRecordingUrl(undefined);
+      updateShowAlert([true, 'Task created successfully', 'success']);
     } catch (error) {
+      setCreating(false);
       console.error('Error uploading file:', error);
+      updateShowAlert([true, 'Error uploading task', 'error']);
     }
   }
 
@@ -78,6 +94,10 @@ function CreateTask({ open, toggleCreatingTask }: CreateTaskProps) {
       ...prev,
       ...value,
     }));
+  }
+
+  function updateRecordingStatus(status: boolean) {
+    setRecordingStatus(status);
   }
 
   function handleRecordingComplete(url: string) {
@@ -94,7 +114,7 @@ function CreateTask({ open, toggleCreatingTask }: CreateTaskProps) {
       <Modal
         open={open}
         onClose={toggleCreatingTask}
-        onClick={(e) => e.stopPropagation()} // Prevent event propagation to the backdrop
+        onClick={(e) => e.stopPropagation()}
         sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
       >
         <Paper
@@ -104,7 +124,7 @@ function CreateTask({ open, toggleCreatingTask }: CreateTaskProps) {
             maxWidth: 600,
             bgcolor: 'background.paper',
           }}
-          onClick={(e) => e.stopPropagation()} // Prevent event propagation to the modal content
+          onClick={(e) => e.stopPropagation()}
         >
           <Box component='form' onSubmit={handleSubmit}>
             <Typography variant='h6' m={2}>
@@ -131,21 +151,12 @@ function CreateTask({ open, toggleCreatingTask }: CreateTaskProps) {
               margin='normal'
             />
             <Box mt={2}>
-              <VoiceRecorder onRecordingComplete={handleRecordingComplete} />
+              <VoiceRecorder
+                onRecordingComplete={handleRecordingComplete}
+                updateRecordingStatus={updateRecordingStatus}
+              />
             </Box>
-            <Snackbar
-              open={showAlert}
-              autoHideDuration={6000}
-              onClose={() => setShowAlert(false)}
-            >
-              <Alert
-                onClose={() => setShowAlert(false)}
-                severity='warning'
-                sx={{ width: '100%' }}
-              >
-                Title and Description are required!
-              </Alert>
-            </Snackbar>
+
             <Box display={'flex'} justifyContent={'space-between'} mt={1}>
               <Button
                 variant='contained'
@@ -159,7 +170,7 @@ function CreateTask({ open, toggleCreatingTask }: CreateTaskProps) {
                 variant='contained'
                 color='primary'
                 type='submit'
-                disabled={addTaskMutation.isLoading}
+                disabled={addTaskMutation.isLoading || creating}
               >
                 Save
               </Button>

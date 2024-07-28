@@ -7,9 +7,11 @@ import { useState } from 'react';
 import Modal from '@mui/material/Modal';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
+import AlertMessage from './AlertMessage';
 import Backdrop from '@mui/material/Backdrop';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+
 import Box from '@mui/material/Box';
 
 type Task = {
@@ -22,11 +24,15 @@ type Task = {
 
 type UpdateTaskProps = {
   open: boolean;
+  updateShowAlert: (
+    value: [boolean, string, 'success' | 'error' | 'info' | 'warning']
+  ) => void;
   toggleUpdatingTask: () => void;
 };
 
 function UpdateTask({
   open,
+  updateShowAlert,
   toggleUpdatingTask,
   _id,
   title,
@@ -39,12 +45,14 @@ function UpdateTask({
     title: title,
     description: description,
     completed: completed,
-    recording: recording || '', // Ensure the recording URL is included
+    recording: recording || '',
   });
 
   const [recordingUrl, setRecordingUrl] = useState<string | undefined>(
     recording
   );
+  const [recordingStatus, setRecordingStatus] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   const queryClient = useQueryClient();
 
@@ -59,24 +67,42 @@ function UpdateTask({
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
+    if (!newTask.title || !newTask.description) {
+      updateShowAlert([true, 'Please enter title and description', 'error']);
+      return;
+    }
+
+    if (recordingStatus) {
+      updateShowAlert([true, 'Please stop recording', 'error']);
+      return;
+    }
+
     try {
       if (recordingUrl) {
+        setUploading(true);
         const response = await fetch(recordingUrl);
         const blob = await response.blob();
         const storageRef = ref(storage, `audio/${Date.now()}.mp3`);
         const snapshot = await uploadBytes(storageRef, blob);
         const downloadURL = await getDownloadURL(snapshot.ref);
-        console.log('File available at', downloadURL);
-        updateTaskMutation.mutate({
+        setUploading(false);
+        await updateTaskMutation.mutateAsync({
           ...newTask,
           recording: downloadURL,
         });
-        setRecordingUrl(undefined);
       } else {
-        updateTaskMutation.mutate({ ...newTask });
+        await updateTaskMutation.mutateAsync({
+          ...newTask,
+          recording: recording,
+        });
       }
+
+      setRecordingUrl(undefined);
+      updateShowAlert([true, 'Task updated successfully', 'success']);
     } catch (error) {
+      setUploading(false);
       console.error('Error uploading file:', error);
+      updateShowAlert([true, 'Error uploading task', 'error']);
     }
   }
 
@@ -87,9 +113,13 @@ function UpdateTask({
     }));
   }
 
+  function updateRecordingStatus(status: boolean) {
+    setRecordingStatus(status);
+  }
+
   function handleRecordingComplete(url: string) {
-    setRecordingUrl(url); // Update the recording URL state
-    updateNewTask({ recording: url }); // Update task state with the new recording URL
+    setRecordingUrl(url);
+    updateNewTask({ recording: url });
   }
 
   return (
@@ -101,7 +131,7 @@ function UpdateTask({
       <Modal
         open={open}
         onClose={toggleUpdatingTask}
-        onClick={(e) => e.stopPropagation()} // Prevent event propagation to the backdrop
+        onClick={(e) => e.stopPropagation()}
         sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}
       >
         <Paper
@@ -111,7 +141,7 @@ function UpdateTask({
             maxWidth: 600,
             bgcolor: 'background.paper',
           }}
-          onClick={(e) => e.stopPropagation()} // Prevent event propagation to the modal content
+          onClick={(e) => e.stopPropagation()}
         >
           <Box component='form' onSubmit={handleSubmit}>
             <Typography variant='h6' m={2}>
@@ -137,8 +167,13 @@ function UpdateTask({
               margin='normal'
             />
             <Box mt={2}>
-              <VoiceRecorder onRecordingComplete={handleRecordingComplete} />
+              <VoiceRecorder
+                prevUrl={recording}
+                onRecordingComplete={handleRecordingComplete}
+                updateRecordingStatus={updateRecordingStatus}
+              />
             </Box>
+
             <Box display={'flex'} justifyContent={'space-between'} mt={1}>
               <Button
                 variant='contained'
@@ -152,7 +187,7 @@ function UpdateTask({
                 variant='contained'
                 color='primary'
                 type='submit'
-                disabled={updateTaskMutation.isLoading}
+                disabled={updateTaskMutation.isLoading || uploading}
               >
                 Save
               </Button>

@@ -1,16 +1,16 @@
-import { useQuery } from 'react-query';
-import { getTasks } from '../api/tasksAPI';
-
 import { useState } from 'react';
+import { useGetTasks } from '../api/taskQueries'; // Import the useGetTasks hook
 
 import TaskView from './TaskView';
 import CreateTask from './CreateTask';
+import AlertMessage from './AlertMessage';
 
 import Fab from '@mui/material/Fab';
 import TextField from '@mui/material/TextField';
 import CircularProgress from '@mui/material/CircularProgress';
 
 import Box from '@mui/material/Box';
+import { Typography } from '@mui/material';
 
 type Task = {
   _id: number;
@@ -20,14 +20,17 @@ type Task = {
   recording?: string;
 };
 
-function Tasks() {
+function Tasks({
+  updateShowAlert,
+}: {
+  updateShowAlert: (
+    value: [boolean, string, 'success' | 'error' | 'info' | 'warning']
+  ) => void;
+}) {
   const [filter, setFilter] = useState<string>('');
   const [creatingTask, setCreatingTask] = useState(false);
 
-  const tasksQuery = useQuery<Task[], Error>({
-    queryKey: ['tasks'],
-    queryFn: getTasks,
-  });
+  const { data: tasks, isLoading, isError } = useGetTasks();
 
   function toggleCreatingTask() {
     setCreatingTask((prevState) => !prevState);
@@ -37,10 +40,14 @@ function Tasks() {
     setFilter(e.target.value);
   }
 
-  const filteredTasks = tasksQuery.data?.filter((task) =>
+  const filteredTasks = tasks?.filter((task: Task) =>
     task.title.toLowerCase().includes(filter.toLowerCase())
   );
 
+  if (isError) {
+    updateShowAlert([true, 'Error fetching tasks', 'error']);
+    return <Typography variant='h5'>Network Error - probably</Typography>;
+  }
   return (
     <>
       <Box mt={'72px'}>
@@ -61,6 +68,7 @@ function Tasks() {
         {creatingTask ? (
           <CreateTask
             open={creatingTask}
+            updateShowAlert={updateShowAlert}
             toggleCreatingTask={toggleCreatingTask}
           />
         ) : (
@@ -81,13 +89,17 @@ function Tasks() {
         )}
       </Box>
 
-      {tasksQuery.isLoading ? (
+      {isLoading ? (
         <CircularProgress variant='indeterminate' />
-      ) : tasksQuery.isError ? (
-        <div>Error - {tasksQuery.error.message}</div>
       ) : filteredTasks ? (
         filteredTasks.map((data: Task) => {
-          return <TaskView key={data._id} {...data} />;
+          return (
+            <TaskView
+              key={data._id}
+              {...data}
+              updateShowAlert={updateShowAlert}
+            />
+          );
         })
       ) : null}
     </>

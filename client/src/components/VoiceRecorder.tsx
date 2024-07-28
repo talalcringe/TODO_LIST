@@ -10,10 +10,16 @@ import SettingsVoiceRounded from '@mui/icons-material/SettingsVoiceRounded';
 import Box from '@mui/material/Box';
 
 type VoiceRecorderProps = {
+  prevUrl?: string;
   onRecordingComplete: (url: string) => void;
+  updateRecordingStatus: (status: boolean) => void;
 };
 
-function VoiceRecorder({ onRecordingComplete }: VoiceRecorderProps) {
+function VoiceRecorder({
+  prevUrl,
+  onRecordingComplete,
+  updateRecordingStatus,
+}: VoiceRecorderProps) {
   const [isRecording, setIsRecording] = useState(false);
 
   function toggleIsRecording() {
@@ -48,6 +54,7 @@ function VoiceRecorder({ onRecordingComplete }: VoiceRecorderProps) {
                   size='small'
                   color='primary'
                   onClick={() => {
+                    updateRecordingStatus(false);
                     toggleIsRecording();
                     stopRecording();
                   }}
@@ -59,6 +66,7 @@ function VoiceRecorder({ onRecordingComplete }: VoiceRecorderProps) {
                   size='small'
                   color='info'
                   onClick={() => {
+                    updateRecordingStatus(true);
                     toggleIsRecording();
                     startRecording();
                   }}
@@ -71,7 +79,7 @@ function VoiceRecorder({ onRecordingComplete }: VoiceRecorderProps) {
 
             <CardMedia
               component={'audio'}
-              src={mediaBlobUrl}
+              src={mediaBlobUrl ? mediaBlobUrl : prevUrl}
               controls
               autoPlay
               loop

@@ -16,7 +16,7 @@ const taskSchema = new mongoose.Schema(
     },
     recording: {
       type: String,
-      default: null,
+      default: '',
     },
   },
   {
