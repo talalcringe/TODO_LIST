@@ -8,8 +8,8 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
-
 import Box from '@mui/material/Box';
+import CircularProgress from '@mui/material/CircularProgress'; // Import CircularProgress
 
 type TaskCardProps = {
   title: string;
@@ -22,6 +22,7 @@ type TaskCardProps = {
   handleCheckboxChange: (val: boolean) => void;
   setDialogOpen: (open: boolean) => void;
   handleCardClick: () => void;
+  isAudioFetching: boolean; // Add this prop
 };
 
 function TaskCard({
@@ -35,6 +36,7 @@ function TaskCard({
   handleCheckboxChange,
   setDialogOpen,
   handleCardClick,
+  isAudioFetching, // Destructure this prop
 }: TaskCardProps) {
   return (
     <Card elevation={2} onClick={handleCardClick}>
@@ -63,11 +65,27 @@ function TaskCard({
       </CardContent>
       <CardActions>
         <Box display={'flex'} flexDirection={'column'} width={'100%'}>
-          {audioUrl && (
-            <Box mb={2}>
+          <Box mb={2}>
+            {isAudioFetching ? (
+              <Box
+                display='flex'
+                justifyContent='center'
+                alignItems='center'
+                height='100px'
+              >
+                <CircularProgress />
+                <Typography variant='body2' ml={2}>
+                  Loading audio...
+                </Typography>
+              </Box>
+            ) : audioUrl ? (
               <CardMedia component='audio' src={audioUrl} controls />
-            </Box>
-          )}
+            ) : (
+              <Typography variant='body2' color='text.secondary' align='center'>
+                No recording available
+              </Typography>
+            )}
+          </Box>
           <Box
             width={'100%'}
             display={'flex'}
@@ -109,7 +127,7 @@ function TaskCard({
                   title={checked ? 'Mark as Incomplete' : 'Mark as Complete'}
                 >
                   <Checkbox
-                    onClick={(e) => e.stopPropagation()} // Prevent event propagation
+                    onClick={(e) => e.stopPropagation()}
                     onChange={(e) => handleCheckboxChange(e.target.checked)}
                     checked={checked}
                     disabled={updateTaskMutationLoading}
