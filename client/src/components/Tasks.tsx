@@ -3,7 +3,6 @@ import { useGetTasks } from '../api/taskQueries'; // Import the useGetTasks hook
 
 import TaskView from './TaskView';
 import CreateTask from './CreateTask';
-import AlertMessage from './AlertMessage';
 
 import Fab from '@mui/material/Fab';
 import TextField from '@mui/material/TextField';
