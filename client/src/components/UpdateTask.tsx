@@ -97,10 +97,12 @@ function UpdateTask({
       }
 
       setRecordingUrl(undefined);
+      setRecordingStatus(false);
       updateShowAlert([true, 'Task updated successfully', 'success']);
     } catch (error) {
       setUploading(false);
       console.error('Error uploading file:', error);
+      setRecordingStatus(false);
       updateShowAlert([true, 'Error uploading task', 'error']);
     }
   }

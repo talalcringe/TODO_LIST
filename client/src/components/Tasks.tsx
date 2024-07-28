@@ -73,11 +73,11 @@ function Tasks({
         ) : (
           <Fab
             variant='extended'
-            color='primary'
+            color='warning'
             aria-label='add'
             onClick={toggleCreatingTask}
             sx={{
-              bgcolor: 'info',
+              bgcolor: 'success',
               position: 'fixed',
               bottom: 16,
               right: 16,
@@ -90,16 +90,24 @@ function Tasks({
 
       {isLoading ? (
         <CircularProgress variant='indeterminate' />
+      ) : filteredTasks && filteredTasks.length === 0 ? (
+        <Typography variant='h5'>No tasks yet {`:)`}</Typography>
       ) : filteredTasks ? (
-        filteredTasks.map((data: Task) => {
-          return (
+        <Box
+          display={'flex'}
+          gap={2}
+          flexWrap={'wrap'}
+          alignItems={'center'}
+          justifyContent={'center'}
+        >
+          {filteredTasks.map((data: Task) => (
             <TaskView
               key={data._id}
               {...data}
               updateShowAlert={updateShowAlert}
             />
-          );
-        })
+          ))}
+        </Box>
       ) : null}
     </>
   );

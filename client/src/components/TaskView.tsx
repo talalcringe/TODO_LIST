@@ -2,6 +2,7 @@ import { useFetchAudio, useDeleteAudio } from '../api/audioQueries';
 import { useState } from 'react';
 import Modal from '@mui/material/Modal';
 import Backdrop from '@mui/material/Backdrop';
+import Tooltip from '@mui/material/Tooltip';
 import TaskCard from './TaskCard';
 import UpdateTask from './UpdateTask';
 import DeleteDialog from './DeleteDialog';
@@ -88,19 +89,21 @@ function TaskView({
   return (
     <>
       <Box mt={2}>
-        <TaskCard
-          title={title}
-          description={description}
-          audioUrl={audioUrl ?? ''}
-          checked={checked}
-          expanded={false}
-          updateTaskMutationLoading={updateTaskMutation.isLoading}
-          toggleUpdatingTask={toggleUpdatingTask}
-          handleCheckboxChange={handleCheckboxChange}
-          setDialogOpen={setDialogOpen}
-          handleCardClick={handleCardClick}
-          isAudioFetching={isAudioFetching}
-        />
+        <Tooltip title='Expand'>
+          <TaskCard
+            title={title}
+            description={description}
+            audioUrl={audioUrl ?? ''}
+            checked={checked}
+            expanded={false}
+            updateTaskMutationLoading={updateTaskMutation.isLoading}
+            toggleUpdatingTask={toggleUpdatingTask}
+            handleCheckboxChange={handleCheckboxChange}
+            setDialogOpen={setDialogOpen}
+            handleCardClick={handleCardClick}
+            isAudioFetching={isAudioFetching}
+          />
+        </Tooltip>
       </Box>
       <DeleteDialog
         open={dialogOpen}

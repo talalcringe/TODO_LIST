@@ -29,6 +29,7 @@ function App() {
         justifyContent='start'
         alignItems='center'
         position='relative'
+        bgcolor={'#f2f2f2'}
       >
         <Box
           position='fixed'
@@ -38,7 +39,7 @@ function App() {
           top={'0px'}
           bgcolor={'white'}
         >
-          <Typography variant='h3' align='center'>
+          <Typography variant='h3' align='center' color={'#007bff '}>
             TODOList
           </Typography>
           <Box width='100%'>
