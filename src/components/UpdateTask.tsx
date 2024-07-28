@@ -9,9 +9,9 @@ import VoiceRecorder from './VoiceRecorder';
 import { useState } from 'react';
 
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
 
 type Task = {
   _id: number;
@@ -82,17 +82,6 @@ function UpdateTask({
       toggleUpdatingTask();
     }
   }
-
-  // function handleSubmit(e: React.FormEvent) {
-  //   e.preventDefault();
-
-  //   console.log('recordingUrl', recordingUrl);
-  //   updateTaskMutation.mutate({
-  //     ...newTask,
-  //     recording: recordingUrl, // Include the recording URL in the update
-  //   });
-  //   toggleUpdatingTask();
-  // }
 
   function updateNewTask(value: Partial<Task>) {
     setNewTask((prev) => ({

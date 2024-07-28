@@ -1,22 +1,25 @@
-import { useState, useEffect } from 'react';
 import { useMutation, useQueryClient } from 'react-query';
 import { deleteTask, updateTask } from '../api/tasksAPI';
+
 import UpdateTask from './UpdateTask';
 import DeleteDialog from './DeleteDialog';
+
 import { storage } from '../api/firebase';
 import { ref, getDownloadURL, deleteObject } from 'firebase/storage';
 
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardActions from '@mui/material/CardActions';
-import Typography from '@mui/material/Typography';
-import Checkbox from '@mui/material/Checkbox';
+import { useState, useEffect } from 'react';
+
 import Box from '@mui/material/Box';
 import Fab from '@mui/material/Fab';
+import Card from '@mui/material/Card';
+import Tooltip from '@mui/material/Tooltip';
+import Checkbox from '@mui/material/Checkbox';
+import CardMedia from '@mui/material/CardMedia';
+import Typography from '@mui/material/Typography';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
-import CardMedia from '@mui/material/CardMedia';
-import Tooltip from '@mui/material/Tooltip';
 
 type Task = {
   _id: number;

@@ -3,8 +3,8 @@ import { getTasks } from '../api/tasksAPI';
 
 import { useState } from 'react';
 
-import CreateTask from './CreateTask';
 import TaskCard from './TaskCard';
+import CreateTask from './CreateTask';
 
 import Fab from '@mui/material/Fab';
 import Box from '@mui/material/Box';
