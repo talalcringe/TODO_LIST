@@ -3,13 +3,14 @@ import { getTasks } from '../api/tasksAPI';
 
 import { useState } from 'react';
 
-import TaskCard from './TaskCard';
+import TaskView from './TaskView';
 import CreateTask from './CreateTask';
 
 import Fab from '@mui/material/Fab';
-import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import CircularProgress from '@mui/material/CircularProgress';
+
+import Box from '@mui/material/Box';
 
 type Task = {
   _id: number;
@@ -45,7 +46,7 @@ function Tasks() {
       <Box mt={'72px'}>
         <TextField
           size='small'
-          label='Filter'
+          label='Search'
           value={filter}
           onChange={updateFilter}
         />
@@ -58,7 +59,10 @@ function Tasks() {
         alignItems='center'
       >
         {creatingTask ? (
-          <CreateTask toggleCreatingTask={toggleCreatingTask} />
+          <CreateTask
+            open={creatingTask}
+            toggleCreatingTask={toggleCreatingTask}
+          />
         ) : (
           <Fab
             variant='extended'
@@ -83,7 +87,7 @@ function Tasks() {
         <div>Error - {tasksQuery.error.message}</div>
       ) : filteredTasks ? (
         filteredTasks.map((data: Task) => {
-          return <TaskCard key={data._id} {...data} />;
+          return <TaskView key={data._id} {...data} />;
         })
       ) : null}
     </>

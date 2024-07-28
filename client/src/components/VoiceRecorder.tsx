@@ -1,12 +1,13 @@
 import { useState } from 'react';
 import { ReactMediaRecorder } from 'react-media-recorder';
 
-import Box from '@mui/material/Box';
 import Fab from '@mui/material/Fab';
 import Typography from '@mui/material/Typography';
 import CardMedia from '@mui/material/CardMedia';
 import MicRounded from '@mui/icons-material/MicRounded';
 import SettingsVoiceRounded from '@mui/icons-material/SettingsVoiceRounded';
+
+import Box from '@mui/material/Box';
 
 type VoiceRecorderProps = {
   onRecordingComplete: (url: string) => void;

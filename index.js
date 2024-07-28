@@ -28,7 +28,7 @@ mongoose
   .connect(MONGO_URI)
   .then(() => {
     console.log('MongoDB connected');
-    console.log(path.join(__dirname, 'client/dist'));
+    // console.log(path.join(__dirname, 'client/dist'));
 
     app.listen(3000, () => {
       console.log('Server is running on port 3000');
