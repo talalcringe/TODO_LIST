@@ -109,7 +109,7 @@ function TaskCard({
               <Tooltip title='Edit'>
                 <Fab
                   size='small'
-                  color='success'
+                  color='primary'
                   sx={{ zIndex: 1 }}
                   onClick={(e) => {
                     e.stopPropagation();
@@ -121,7 +121,7 @@ function TaskCard({
               </Tooltip>
             </Box>
             <Box display={'flex'} alignItems={'center'}>
-              <Typography variant='body2'>
+              <Typography variant='body2' color={checked ? 'green' : 'primary'}>
                 {checked ? 'Completed' : 'In Progress'}
                 <Tooltip
                   title={checked ? 'Mark as Incomplete' : 'Mark as Complete'}
