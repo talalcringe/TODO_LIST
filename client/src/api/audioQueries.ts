@@ -8,14 +8,20 @@ import {
 import { storage } from './firebase';
 
 export const useFetchAudio = (audioPath?: string) => {
-  return useQuery(['fetchAudio', audioPath], async () => {
-    if (!audioPath) {
-      throw new Error('Audio path is required');
+  return useQuery(
+    ['fetchAudio', audioPath],
+    async () => {
+      if (!audioPath) {
+        throw new Error('Audio path is required');
+      }
+      const audioRef = ref(storage, audioPath);
+      const url = await getDownloadURL(audioRef);
+      return url;
+    },
+    {
+      retry: false,
     }
-    const audioRef = ref(storage, audioPath);
-    const url = await getDownloadURL(audioRef);
-    return url;
-  });
+  );
 };
 
 export const useDeleteAudio = () => {
