@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { ReactMediaRecorder } from 'react-media-recorder';
 
 import Fab from '@mui/material/Fab';
+import Badge from '@mui/material/Badge';
 import Typography from '@mui/material/Typography';
 import CardMedia from '@mui/material/CardMedia';
 import MicRounded from '@mui/icons-material/MicRounded';
@@ -44,23 +45,25 @@ function VoiceRecorder({
           >
             <Box
               display={'flex'}
-              // flexDirection={'column'}
               gap={1}
               justifyContent={'center'}
               alignItems={'center'}
             >
               {isRecording ? (
-                <Fab
-                  size='small'
-                  color='primary'
-                  onClick={() => {
-                    updateRecordingStatus(false);
-                    toggleIsRecording();
-                    stopRecording();
-                  }}
-                >
-                  <SettingsVoiceRounded />
-                </Fab>
+                <Badge color='error' variant='dot' sx={{ zIndex: 10 }}>
+                  <Fab
+                    size='small'
+                    color='primary'
+                    sx={{ zIndex: 1 }}
+                    onClick={() => {
+                      updateRecordingStatus(false);
+                      toggleIsRecording();
+                      stopRecording();
+                    }}
+                  >
+                    <SettingsVoiceRounded />
+                  </Fab>
+                </Badge>
               ) : (
                 <Fab
                   size='small'
