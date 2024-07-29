@@ -45,15 +45,15 @@ function Tasks({
     task.title.toLowerCase().includes(filter.toLowerCase())
   );
 
-  const sortedTasks = filteredTasks.sort((a: Task, b: Task) => {
-    // First, sort by completed status (in-progress tasks should come first)
-    if (a.completed !== b.completed) {
-      return a.completed ? 1 : -1; // Completed tasks go to the end
-    }
+  const sortedTasks =
+    filteredTasks?.sort((a: Task, b: Task) => {
+      if (a.completed !== b.completed) {
+        return a.completed ? 1 : -1;
+      }
 
-    // If both tasks have the same completed status, sort by updatedAt timestamp
-    return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
-  });
+      return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
+    }) || [];
+
   if (isError) {
     updateShowAlert([true, 'Error fetching tasks', 'error']);
     return <Typography variant='h5'>Network Error - probably</Typography>;

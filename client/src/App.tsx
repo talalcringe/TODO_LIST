@@ -29,7 +29,7 @@ function App() {
         justifyContent='start'
         alignItems='center'
         position='relative'
-        bgcolor={'#f2f2f2'}
+        bgcolor={'#fffdd0'}
       >
         <Box
           position='fixed'
