@@ -23,12 +23,12 @@ function App() {
     <>
       <Box
         display='flex'
-        height={'100vh'}
         gap={2}
         flexDirection='column'
         justifyContent='start'
         alignItems='center'
         position='relative'
+        top={'0px'}
         bgcolor={'#fffdd0'}
       >
         <Box
@@ -39,7 +39,7 @@ function App() {
           top={'0px'}
           bgcolor={'white'}
         >
-          <Typography variant='h3' align='center' color={'#007bff '}>
+          <Typography variant='h3' align='center' color={'#007bff'}>
             TODOList
           </Typography>
           <Box width='100%'>

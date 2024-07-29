@@ -66,6 +66,7 @@ function Tasks({
           size='small'
           label='Search'
           value={filter}
+          sx={{ bgcolor: 'white' }}
           onChange={updateFilter}
         />
       </Box>
