@@ -24,6 +24,7 @@ function App() {
       <Box
         position={'fixed'}
         height={'100vh'}
+        width={'100vw'}
         display='flex'
         flexDirection='column'
         justifyContent='start'
