@@ -2,7 +2,6 @@ import { useState } from 'react';
 
 import Tasks from './components/Tasks';
 
-import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
 
 import Box from '@mui/material/Box';
