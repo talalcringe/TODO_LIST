@@ -22,11 +22,14 @@ function App() {
   return (
     <>
       <Box
+        position={'fixed'}
+        height={'100vh'}
         display='flex'
         flexDirection='column'
         justifyContent='start'
         alignItems='center'
         bgcolor={'#fffdd0'}
+        overflow={'auto'}
       >
         <Box
           position='fixed'
@@ -39,6 +42,7 @@ function App() {
           alignItems='center'
           justifyContent='space-between'
           padding='0 16px'
+          borderBottom={'1px solid lightgrey'}
         >
           <Box display='flex' alignItems='center' flex='1'>
             <img src='./logo.png' alt='Logo' width='50px' />
