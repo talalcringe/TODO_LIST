@@ -23,12 +23,9 @@ function App() {
     <>
       <Box
         display='flex'
-        gap={2}
         flexDirection='column'
         justifyContent='start'
         alignItems='center'
-        position='relative'
-        top={'0px'}
         bgcolor={'#fffdd0'}
       >
         <Box
@@ -38,13 +35,24 @@ function App() {
           zIndex={10}
           top={'0px'}
           bgcolor={'white'}
+          display='flex'
+          alignItems='center'
+          justifyContent='space-between'
+          padding='0 16px'
         >
-          <Typography variant='h3' align='center' color={'#007bff'}>
-            TODOList
-          </Typography>
-          <Box width='100%'>
-            <Divider />
+          <Box display='flex' alignItems='center' flex='1'>
+            <img src='./logo.png' alt='Logo' width='50px' />
           </Box>
+          <Typography
+            variant='h4'
+            align='center'
+            color={'#007bff'}
+            flex='2'
+            sx={{ overflow: 'hidden', textOverflow: 'ellipsis' }}
+          >
+            Todo List
+          </Typography>
+          <Box flex={1} />
         </Box>
         <Tasks updateShowAlert={updateShowAlert} />
         <AlertMessage showAlert={showAlert} updateShowAlert={updateShowAlert} />
