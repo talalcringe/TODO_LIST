@@ -30,3 +30,4 @@ Using the project is straightforward.
 * Besides the delete button there is a pen button, you can click this to open a task updating screen. All functions here are identical to the creation screen. If audio is recorded again, it will replace the previous one.
 * On the opposite side there is a checkbox that you can toggle on and off to define if this task is complete or not.
 * After adding multiple tasks, you can type a query in the searchbar at the top to find a task quickly.
+* Tasks are sorted by last updated but completing a task will push it to the bottom with other completed tasks
