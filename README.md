@@ -1,5 +1,5 @@
 # TodoList App
-This is a basic todo list app with voice recording support accessible from anywhere at [https://todo-list-1rsq.onrender.com/].
+This is a basic todo list app with voice recording support accessible from anywhere at [https://todo-list-1rsq.onrender.com/] (It may take some time to load the first time as its hosted on a free plan).
 
 ## Description
 Using this app you can create,update and delete tasks. One recording at a time can be associated with the task and will be saved for future viewing in the app's backend. There is no user login/signup/tracking as of now. 
@@ -30,3 +30,4 @@ Using the project is straightforward.
 * Besides the delete button there is a pen button, you can click this to open a task updating screen. All functions here are identical to the creation screen. If audio is recorded again, it will replace the previous one.
 * On the opposite side there is a checkbox that you can toggle on and off to define if this task is complete or not.
 * After adding multiple tasks, you can type a query in the searchbar at the top to find a task quickly.
+* Tasks are sorted by last updated but completing a task will push it to the bottom with other completed tasks
