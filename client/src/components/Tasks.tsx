@@ -147,13 +147,17 @@ function Tasks({
           alignItems={'center'}
           justifyContent={'center'}
         >
-          {sortedTasks.map((data: Task) => (
-            <TaskView
-              key={data._id}
-              {...data}
-              updateShowAlert={updateShowAlert}
-            />
-          ))}
+          {sortedTasks.length === 0 ? (
+            <Typography variant='h5'>No tasks yet {`:)`}</Typography>
+          ) : (
+            sortedTasks.map((data: Task) => (
+              <TaskView
+                key={data._id}
+                {...data}
+                updateShowAlert={updateShowAlert}
+              />
+            ))
+          )}
         </Box>
       ) : null}
     </>

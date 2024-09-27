@@ -12,7 +12,7 @@ const getTasks = async (req, res) => {
 const createTask = async (req, res) => {
   try {
     const task = await Task.create(req.body);
-    res.status(200).json(task);
+    res.status(201).json(task);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -43,7 +43,7 @@ const deleteTask = async (req, res) => {
       return res.status(404).json({ error: 'Task not found' });
     }
 
-    res.status(200).json({ message: 'Task deleted successfully' });
+    res.status(204).json({ message: 'Task deleted successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

@@ -43,6 +43,7 @@ function Filter({
           display={'flex'}
           gap={1}
           alignItems={'center'}
+          justifyContent={'center'}
           flexWrap={'wrap'}
           bgcolor={'#fff'}
           borderRadius={2}
