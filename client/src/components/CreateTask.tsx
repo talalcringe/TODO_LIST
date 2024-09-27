@@ -1,8 +1,5 @@
 import { useMutation, useQueryClient } from 'react-query';
 import { addTask } from '../api/tasksAPI';
-import { storage } from '../api/firebase';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import VoiceRecorder from './VoiceRecorder';
 import { useState } from 'react';
 import Modal from '@mui/material/Modal';
 import Paper from '@mui/material/Paper';
@@ -18,7 +15,6 @@ type Task = {
   title: string;
   description: string;
   completed?: boolean;
-  recording?: string;
 };
 
 type CreateTaskProps = {
@@ -35,8 +31,6 @@ function CreateTask({
   toggleCreatingTask,
 }: CreateTaskProps) {
   const [newTask, setNewTask] = useState<Task>({ title: '', description: '' });
-  const [recordingUrl, setRecordingUrl] = useState<string | undefined>();
-  const [recordingStatus, setRecordingStatus] = useState(false);
   const [creating, setCreating] = useState(false);
 
   const queryClient = useQueryClient();
@@ -57,29 +51,10 @@ function CreateTask({
       return;
     }
 
-    if (recordingStatus) {
-      updateShowAlert([true, 'Please stop recording', 'error']);
-      return;
-    }
-
     try {
-      if (recordingUrl) {
-        setCreating(true);
-        const response = await fetch(recordingUrl);
-        const blob = await response.blob();
-        const storageRef = ref(storage, `audio/${Date.now()}.mp3`);
-        const snapshot = await uploadBytes(storageRef, blob);
-        const downloadURL = await getDownloadURL(snapshot.ref);
-        setCreating(false);
-        await addTaskMutation.mutateAsync({
-          ...newTask,
-          recording: downloadURL,
-        });
-      } else {
-        await addTaskMutation.mutateAsync(newTask);
-      }
+      await addTaskMutation.mutateAsync(newTask);
 
-      setRecordingUrl(undefined);
+      setCreating(false);
       updateShowAlert([true, 'Task created successfully', 'success']);
     } catch (error) {
       setCreating(false);
@@ -93,15 +68,6 @@ function CreateTask({
       ...prev,
       ...value,
     }));
-  }
-
-  function updateRecordingStatus(status: boolean) {
-    setRecordingStatus(status);
-  }
-
-  function handleRecordingComplete(url: string) {
-    setRecordingUrl(url);
-    updateNewTask({ recording: url });
   }
 
   return (
@@ -149,12 +115,6 @@ function CreateTask({
               fullWidth
               margin='normal'
             />
-            <Box mt={2}>
-              <VoiceRecorder
-                onRecordingComplete={handleRecordingComplete}
-                updateRecordingStatus={updateRecordingStatus}
-              />
-            </Box>
 
             <Box display={'flex'} justifyContent={'space-between'} mt={1}>
               <Button

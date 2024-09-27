@@ -1,4 +1,3 @@
-import { useFetchAudio, useDeleteAudio } from '../api/audioQueries';
 import { useState } from 'react';
 import Modal from '@mui/material/Modal';
 import Backdrop from '@mui/material/Backdrop';
@@ -14,7 +13,6 @@ type Task = {
   title: string;
   description: string;
   completed: boolean;
-  recording?: string;
 };
 
 type TaskViewProps = Task & {
@@ -28,7 +26,6 @@ function TaskView({
   title,
   description,
   completed,
-  recording,
   updateShowAlert,
 }: TaskViewProps) {
   const [checked, setChecked] = useState(completed);
@@ -38,20 +35,8 @@ function TaskView({
 
   const deleteTaskMutation = useDeleteTask();
   const updateTaskMutation = useUpdateTask();
-  const deleteAudioMutation = useDeleteAudio();
-
-  const { data: audioUrl, isFetching: isAudioFetching } =
-    useFetchAudio(recording);
 
   async function handleDeleteTask() {
-    if (recording) {
-      deleteAudioMutation.mutate(recording, {
-        onError: (error) => {
-          console.error('Error deleting audio file:', error);
-          updateShowAlert([true, 'Error deleting audio file', 'error']);
-        },
-      });
-    }
     deleteTaskMutation.mutate(_id, {
       onError: (error) => {
         console.error('Error deleting task:', error);
@@ -86,14 +71,14 @@ function TaskView({
     setBackdropOpen(false);
   }
 
+  const taskTitle = title;
   return (
     <>
       <Box mt={2}>
         <Tooltip title='Expand'>
           <TaskCard
-            title={title}
+            title={taskTitle}
             description={description}
-            audioUrl={audioUrl ?? ''}
             checked={checked}
             expanded={false}
             updateTaskMutationLoading={updateTaskMutation.isLoading}
@@ -101,7 +86,6 @@ function TaskView({
             handleCheckboxChange={handleCheckboxChange}
             setDialogOpen={setDialogOpen}
             handleCardClick={handleCardClick}
-            isAudioFetching={isAudioFetching}
           />
         </Tooltip>
       </Box>
@@ -128,7 +112,6 @@ function TaskView({
           <TaskCard
             title={title}
             description={description}
-            audioUrl={audioUrl ?? ''}
             checked={checked}
             expanded={true}
             updateTaskMutationLoading={updateTaskMutation.isLoading}
@@ -136,7 +119,6 @@ function TaskView({
             handleCheckboxChange={handleCheckboxChange}
             setDialogOpen={setDialogOpen}
             handleCardClick={handleCardClick}
-            isAudioFetching={isAudioFetching}
           />
         </Modal>
       </Backdrop>
@@ -148,7 +130,6 @@ function TaskView({
         title={title}
         description={description}
         completed={completed}
-        recording={recording}
       />
     </>
   );

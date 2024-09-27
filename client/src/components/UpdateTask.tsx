@@ -1,8 +1,5 @@
 import { useMutation, useQueryClient } from 'react-query';
 import { updateTask } from '../api/tasksAPI';
-import { storage } from '../api/firebase';
-import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
-import VoiceRecorder from './VoiceRecorder';
 import { useState } from 'react';
 import Modal from '@mui/material/Modal';
 import Paper from '@mui/material/Paper';
@@ -18,7 +15,6 @@ type Task = {
   title: string;
   description: string;
   completed: boolean;
-  recording?: string;
 };
 
 type UpdateTaskProps = {
@@ -37,20 +33,14 @@ function UpdateTask({
   title,
   description,
   completed,
-  recording,
 }: UpdateTaskProps & Task) {
   const [newTask, setNewTask] = useState<Task>({
     _id: _id,
     title: title,
     description: description,
     completed: completed,
-    recording: recording || '',
   });
 
-  const [recordingUrl, setRecordingUrl] = useState<string | undefined>(
-    recording
-  );
-  const [recordingStatus, setRecordingStatus] = useState(false);
   const [uploading, setUploading] = useState(false);
 
   const queryClient = useQueryClient();
@@ -71,38 +61,16 @@ function UpdateTask({
       return;
     }
 
-    if (recordingStatus) {
-      updateShowAlert([true, 'Please stop recording', 'error']);
-      return;
-    }
-
     try {
-      if (recordingUrl) {
-        setUploading(true);
-        const response = await fetch(recordingUrl);
-        const blob = await response.blob();
-        const storageRef = ref(storage, `audio/${Date.now()}.mp3`);
-        const snapshot = await uploadBytes(storageRef, blob);
-        const downloadURL = await getDownloadURL(snapshot.ref);
-        setUploading(false);
-        await updateTaskMutation.mutateAsync({
-          ...newTask,
-          recording: downloadURL,
-        });
-      } else {
-        await updateTaskMutation.mutateAsync({
-          ...newTask,
-          recording: recording,
-        });
-      }
+      await updateTaskMutation.mutateAsync({
+        ...newTask,
+      });
 
-      setRecordingUrl(undefined);
-      setRecordingStatus(false);
+      setUploading(false);
       updateShowAlert([true, 'Task updated successfully', 'success']);
     } catch (error) {
       setUploading(false);
       console.error('Error uploading file:', error);
-      setRecordingStatus(false);
       updateShowAlert([true, 'Error uploading task', 'error']);
     }
   }
@@ -112,15 +80,6 @@ function UpdateTask({
       ...prev,
       ...value,
     }));
-  }
-
-  function updateRecordingStatus(status: boolean) {
-    setRecordingStatus(status);
-  }
-
-  function handleRecordingComplete(url: string) {
-    setRecordingUrl(url);
-    updateNewTask({ recording: url });
   }
 
   return (
@@ -167,13 +126,6 @@ function UpdateTask({
               fullWidth
               margin='normal'
             />
-            <Box mt={2}>
-              <VoiceRecorder
-                prevUrl={recording}
-                onRecordingComplete={handleRecordingComplete}
-                updateRecordingStatus={updateRecordingStatus}
-              />
-            </Box>
 
             <Box display={'flex'} justifyContent={'space-between'} mt={1}>
               <Button

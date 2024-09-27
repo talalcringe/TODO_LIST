@@ -2,19 +2,16 @@ import Fab from '@mui/material/Fab';
 import Card from '@mui/material/Card';
 import Tooltip from '@mui/material/Tooltip';
 import Checkbox from '@mui/material/Checkbox';
-import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import Box from '@mui/material/Box';
-import CircularProgress from '@mui/material/CircularProgress'; // Import CircularProgress
 
 type TaskCardProps = {
   title: string;
   description: string;
-  audioUrl: string | null;
   checked: boolean;
   expanded: boolean;
   updateTaskMutationLoading: boolean;
@@ -22,13 +19,11 @@ type TaskCardProps = {
   handleCheckboxChange: (val: boolean) => void;
   setDialogOpen: (open: boolean) => void;
   handleCardClick: () => void;
-  isAudioFetching: boolean; // Add this prop
 };
 
 function TaskCard({
   title,
   description,
-  audioUrl,
   checked,
   expanded,
   updateTaskMutationLoading,
@@ -36,7 +31,6 @@ function TaskCard({
   handleCheckboxChange,
   setDialogOpen,
   handleCardClick,
-  isAudioFetching, // Destructure this prop
 }: TaskCardProps) {
   return (
     <Card elevation={2} onClick={handleCardClick}>
@@ -65,27 +59,6 @@ function TaskCard({
       </CardContent>
       <CardActions>
         <Box display={'flex'} flexDirection={'column'} width={'100%'}>
-          <Box mb={2}>
-            {isAudioFetching ? (
-              <Box
-                display='flex'
-                justifyContent='center'
-                alignItems='center'
-                height='100px'
-              >
-                <CircularProgress />
-                <Typography variant='body2' ml={2}>
-                  Loading audio...
-                </Typography>
-              </Box>
-            ) : audioUrl ? (
-              <CardMedia component='audio' src={audioUrl} controls />
-            ) : (
-              <Typography variant='body2' color='text.secondary' align='center'>
-                No recording available
-              </Typography>
-            )}
-          </Box>
           <Box
             width={'100%'}
             display={'flex'}

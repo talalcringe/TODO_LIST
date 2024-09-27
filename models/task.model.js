@@ -14,10 +14,6 @@ const taskSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
-    recording: {
-      type: String,
-      default: '',
-    },
   },
   {
     timestamps: true,

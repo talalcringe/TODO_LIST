@@ -16,7 +16,6 @@ type Task = {
   title: string;
   description: string;
   completed: boolean;
-  recording?: string;
   createdAt: string;
   updatedAt: string;
 };
