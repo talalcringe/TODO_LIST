@@ -19,13 +19,31 @@ Using this app you can create,update and delete tasks. One recording at a time c
 
 ### Step 1: Clone or download the project from this repo.
 
-### Step 2: Copy the .env files in their respective folders. i.e. TODO_LIST-main/ and TODO_LIST-main/client/
+### Step 2: If you have MongoDB Compass or are willing to download it:(Otherwise goto Step 3)
 
-### Step 3: Run **"npm i"** in TODO_LIST-main/ and TODO_LIST-main/client/ from terminal.
+- Open mongoDB Compass.
+- Create or open a connection and copy its connection string.
+- Create a new database. Name the database "todolist" and collection any name.
+- Create a file named ".env" at the root of the project. Enter: "MONGO_URI=(copied URI/connection string)". After the URI(after the last slash), type "todolist".
 
-### Step 4: Navigate to TODO_LIST-main/client/ in terminal and run **"npm run build"**.
+### Step 3: If you followed step 2 goto step 4. Otherwise:
 
-### Step 5: Come back to TODO_LIST-main/ in terminal and run **npm run start**.
+- Open the mongoDB atlas website and create a new project named "todolist".
+- Create a cluster. Select M0 tier. Create Deployment.
+- Choose a username or password for connecting to the cluster and copy and save the passord for later.
+- Choose connection method. Select drivers. Copy the URI under point 3.
+- Create a file named ".env" at the root of the project. Enter: "MONGO_URI=(copied URI)". In the URI just pasted, replace <password> with the actual password copied earlier.
+
+- Back on the site, in the left sidebar, under SECURITY, open Network Access. Add IP address.
+- Click allow access from anywhere and confirm.
+
+### Step 4: Inside the client folder, create another .env file with the path to the server. By default it is "VITE_BASE_URL='http://localhost:3000/'".
+
+### Step 5: Now run **"npm i"** in TODO_LIST-main/ and TODO_LIST-main/client/ from terminal.
+
+### Step 4: Navigate to TODO_LIST-main/ in terminal and run **"npm run dev"**.
+
+### Step 5: Now go to TODO_LIST-main/client/ in terminal and run **npm run dev**.
 
 ### Step 6: You should be able to access the app from [http://localhost:5173/] now.
 
