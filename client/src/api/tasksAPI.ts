@@ -5,6 +5,7 @@ type Task = {
   title: string;
   description: string;
   completed?: boolean;
+  duedate?: string;
 };
 
 const tasksAPI = axios.create({

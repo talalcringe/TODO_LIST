@@ -10,9 +10,10 @@ import DeleteRoundedIcon from '@mui/icons-material/DeleteRounded';
 import Box from '@mui/material/Box';
 
 type TaskCardProps = {
-  title: string;
+  taskTitle: string;
   description: string;
   checked: boolean;
+  duedate?: string;
   expanded: boolean;
   updateTaskMutationLoading: boolean;
   toggleUpdatingTask: () => void;
@@ -22,9 +23,10 @@ type TaskCardProps = {
 };
 
 function TaskCard({
-  title,
+  taskTitle,
   description,
   checked,
+  duedate,
   expanded,
   updateTaskMutationLoading,
   toggleUpdatingTask,
@@ -32,10 +34,40 @@ function TaskCard({
   setDialogOpen,
   handleCardClick,
 }: TaskCardProps) {
+  const overdue = duedate && new Date(duedate) > new Date();
+
   return (
     <Card elevation={2} onClick={handleCardClick}>
       <CardContent sx={{ width: '300px' }}>
-        <Typography variant='h5'>{title}</Typography>
+        <Typography variant='h5'>{taskTitle}</Typography>
+        {duedate &&
+          (overdue ? (
+            <Typography
+              variant='subtitle2'
+              textAlign='center'
+              width={'max-content'}
+              margin={'0 2%'}
+              borderRadius={1.5}
+              padding={'1px 5px'}
+              color={'#fff'}
+              bgcolor={'#007bff'}
+            >
+              Due by: {duedate.split('T')[0]}
+            </Typography>
+          ) : (
+            <Typography
+              variant='subtitle2'
+              textAlign='center'
+              width={'max-content'}
+              margin={'0 2%'}
+              borderRadius={1.5}
+              padding={'1px 5px'}
+              color={'#fff'}
+              bgcolor='error.main'
+            >
+              Was due on: {duedate.split('T')[0]}
+            </Typography>
+          ))}
 
         {expanded ? (
           <Typography
@@ -67,30 +99,34 @@ function TaskCard({
           >
             <Box>
               <Tooltip title='Delete'>
-                <Fab
-                  size='small'
-                  color='error'
-                  sx={{ mr: 1, zIndex: 1 }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setDialogOpen(true);
-                  }}
-                >
-                  <DeleteRoundedIcon />
-                </Fab>
+                <span>
+                  <Fab
+                    size='small'
+                    color='error'
+                    sx={{ mr: 1, zIndex: 1 }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setDialogOpen(true);
+                    }}
+                  >
+                    <DeleteRoundedIcon />
+                  </Fab>
+                </span>
               </Tooltip>
               <Tooltip title='Edit'>
-                <Fab
-                  size='small'
-                  color='primary'
-                  sx={{ zIndex: 1 }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    toggleUpdatingTask();
-                  }}
-                >
-                  <EditRoundedIcon />
-                </Fab>
+                <span>
+                  <Fab
+                    size='small'
+                    color='primary'
+                    sx={{ zIndex: 1 }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleUpdatingTask();
+                    }}
+                  >
+                    <EditRoundedIcon />
+                  </Fab>
+                </span>
               </Tooltip>
             </Box>
             <Box display={'flex'} alignItems={'center'}>
@@ -99,13 +135,15 @@ function TaskCard({
                 <Tooltip
                   title={checked ? 'Mark as Incomplete' : 'Mark as Complete'}
                 >
-                  <Checkbox
-                    onClick={(e) => e.stopPropagation()}
-                    onChange={(e) => handleCheckboxChange(e.target.checked)}
-                    checked={checked}
-                    disabled={updateTaskMutationLoading}
-                    sx={{ zIndex: 2 }}
-                  />
+                  <span>
+                    <Checkbox
+                      onClick={(e) => e.stopPropagation()}
+                      onChange={(e) => handleCheckboxChange(e.target.checked)}
+                      checked={checked}
+                      disabled={updateTaskMutationLoading}
+                      sx={{ zIndex: 2 }}
+                    />
+                  </span>
                 </Tooltip>
               </Typography>
             </Box>

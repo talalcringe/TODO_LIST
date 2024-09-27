@@ -13,6 +13,7 @@ type Task = {
   title: string;
   description: string;
   completed: boolean;
+  duedate?: string;
 };
 
 type TaskViewProps = Task & {
@@ -26,6 +27,7 @@ function TaskView({
   title,
   description,
   completed,
+  duedate,
   updateShowAlert,
 }: TaskViewProps) {
   const [checked, setChecked] = useState(completed);
@@ -77,9 +79,10 @@ function TaskView({
       <Box mt={2}>
         <Tooltip title='Expand'>
           <TaskCard
-            title={taskTitle}
+            taskTitle={taskTitle}
             description={description}
             checked={checked}
+            duedate={duedate}
             expanded={false}
             updateTaskMutationLoading={updateTaskMutation.isLoading}
             toggleUpdatingTask={toggleUpdatingTask}
@@ -110,9 +113,10 @@ function TaskView({
           onClick={(e) => e.stopPropagation()}
         >
           <TaskCard
-            title={title}
+            taskTitle={taskTitle}
             description={description}
             checked={checked}
+            duedate={duedate}
             expanded={true}
             updateTaskMutationLoading={updateTaskMutation.isLoading}
             toggleUpdatingTask={toggleUpdatingTask}

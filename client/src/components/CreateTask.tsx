@@ -15,6 +15,7 @@ type Task = {
   title: string;
   description: string;
   completed?: boolean;
+  duedate?: string;
 };
 
 type CreateTaskProps = {
@@ -114,6 +115,16 @@ function CreateTask({
               rows={4}
               fullWidth
               margin='normal'
+            />
+            <Typography variant='subtitle1' ml={1}>
+              Due Date
+            </Typography>
+            <TextField
+              id='newTaskDueDate'
+              value={newTask.duedate}
+              onChange={(e) => updateNewTask({ duedate: e.target.value })}
+              type='date'
+              fullWidth
             />
 
             <Box display={'flex'} justifyContent={'space-between'} mt={1}>

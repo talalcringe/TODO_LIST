@@ -15,6 +15,7 @@ type Task = {
   title: string;
   description: string;
   completed: boolean;
+  duedate?: string;
 };
 
 type UpdateTaskProps = {
@@ -33,12 +34,14 @@ function UpdateTask({
   title,
   description,
   completed,
+  duedate,
 }: UpdateTaskProps & Task) {
   const [newTask, setNewTask] = useState<Task>({
     _id: _id,
     title: title,
     description: description,
     completed: completed,
+    duedate: duedate,
   });
 
   const [uploading, setUploading] = useState(false);
@@ -126,7 +129,16 @@ function UpdateTask({
               fullWidth
               margin='normal'
             />
-
+            <Typography variant='subtitle1' ml={1}>
+              Due Date
+            </Typography>
+            <TextField
+              id='newTaskDueDate'
+              value={newTask.duedate}
+              onChange={(e) => updateNewTask({ duedate: e.target.value })}
+              type='date'
+              fullWidth
+            />
             <Box display={'flex'} justifyContent={'space-between'} mt={1}>
               <Button
                 variant='contained'
