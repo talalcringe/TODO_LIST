@@ -97,14 +97,7 @@ function Tasks({
   }
 
   return (
-    <Box
-      height='90vh'
-      display='flex'
-      flexDirection='column'
-      alignItems={'center'}
-      justifyContent={'center'}
-      gap={2}
-    >
+    <>
       <Filter
         search={search}
         filter={filter}
@@ -152,27 +145,8 @@ function Tasks({
           sortedTasks={sortedTasks}
           updateShowAlert={updateShowAlert}
         />
-      ) : // <Box
-      //   display={'flex'}
-      //   gap={2}
-      //   flexWrap={'wrap'}
-      //   alignItems={'center'}
-      //   justifyContent={'center'}
-      // >
-      //   {sortedTasks.length === 0 ? (
-      //     <Typography variant='h5'>No tasks yet {`:)`}</Typography>
-      //   ) : (
-      //     sortedTasks.map((data: Task) => (
-      //       <TaskView
-      //         key={data._id}
-      //         {...data}
-      //         updateShowAlert={updateShowAlert}
-      //       />
-      //     ))
-      //   )}
-      // </Box>
-      null}
-    </Box>
+      ) : null}
+    </>
   );
 }
 

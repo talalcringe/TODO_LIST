@@ -51,7 +51,6 @@ function TaskGroups({
       flexWrap={'wrap'}
       alignItems={'center'}
       justifyContent={'center'}
-      overflow={'auto'}
     >
       {/* <Box>
         <Typography variant='h5'>Overdue</Typography>

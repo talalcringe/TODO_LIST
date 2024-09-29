@@ -23,7 +23,6 @@ function Filter({
   return (
     <>
       <Box
-        mt={'72px'}
         width={'70%'}
         display={'flex'}
         flexDirection={'column'}

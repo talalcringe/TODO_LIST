@@ -21,22 +21,17 @@ function App() {
   return (
     <>
       <Box
-        position={'fixed'}
-        height={'100vh'}
-        width={'100vw'}
+        width={'100%'}
         display='flex'
         flexDirection='column'
         justifyContent='start'
         alignItems='center'
         bgcolor={'#fffdd0'}
-        overflow={'auto'}
       >
         <Box
-          position='fixed'
           width={'100%'}
-          height={'10vh'}
+          height={'56px'}
           zIndex={10}
-          top={'0px'}
           bgcolor={'white'}
           display='flex'
           alignItems='center'
