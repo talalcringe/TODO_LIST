@@ -37,7 +37,7 @@ function TaskCard({
   const overdue = duedate && new Date(duedate) > new Date();
 
   return (
-    <Card elevation={2} onClick={handleCardClick}>
+    <Card elevation={4} onClick={handleCardClick}>
       <CardContent sx={{ width: '300px' }}>
         <Typography variant='h5'>{taskTitle}</Typography>
         {duedate &&
@@ -65,7 +65,7 @@ function TaskCard({
               color={'#fff'}
               bgcolor='error.main'
             >
-              Was due on: {duedate.split('T')[0]}
+              Was due by: {duedate.split('T')[0]}
             </Typography>
           ))}
 

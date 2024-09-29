@@ -1,13 +1,12 @@
 import { useMutation, useQueryClient } from 'react-query';
 import { updateTask } from '../api/tasksAPI';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Modal from '@mui/material/Modal';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Backdrop from '@mui/material/Backdrop';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-
 import Box from '@mui/material/Box';
 
 type Task = {
@@ -44,46 +43,66 @@ function UpdateTask({
     duedate: duedate,
   });
 
-  const [uploading, setUploading] = useState(false);
-
   const queryClient = useQueryClient();
 
+  // Mutation to update the task
   const updateTaskMutation = useMutation({
     mutationFn: (updatedTask: Task) => updateTask(updatedTask),
     onSuccess: () => {
       queryClient.invalidateQueries('tasks');
+      localStorage.removeItem(`pendingTaskUpdate_${newTask._id}`); // Remove the task from localStorage once saved
       toggleUpdatingTask();
+      updateShowAlert([true, 'Task updated successfully', 'success']);
+    },
+    onError: () => {
+      // Inform the user that the task data is saved locally
+      localStorage.setItem(
+        `pendingTaskUpdate_${newTask._id}`,
+        JSON.stringify(newTask)
+      ); // Save current task to localStorage
+      updateShowAlert([
+        true,
+        'No internet connection. Task saved locally.',
+        'info',
+      ]);
     },
   });
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-
-    if (!newTask.title || !newTask.description) {
-      updateShowAlert([true, 'Please enter title and description', 'error']);
-      return;
-    }
-
-    try {
-      await updateTaskMutation.mutateAsync({
-        ...newTask,
-      });
-
-      setUploading(false);
-      updateShowAlert([true, 'Task updated successfully', 'success']);
-    } catch (error) {
-      setUploading(false);
-      console.error('Error uploading file:', error);
-      updateShowAlert([true, 'Error uploading task', 'error']);
-    }
-  }
-
+  // Save the task in localStorage on every change (keystroke)
   function updateNewTask(value: Partial<Task>) {
-    setNewTask((prev) => ({
-      ...prev,
+    const updatedTask = {
+      ...newTask,
       ...value,
-    }));
+    };
+    setNewTask(updatedTask);
+    localStorage.setItem(
+      `pendingTaskUpdate_${updatedTask._id}`,
+      JSON.stringify(updatedTask)
+    ); // Save the current task to localStorage
   }
+
+  // Attempt to upload the task when the user goes back online
+  useEffect(() => {
+    const handleOnline = async () => {
+      const pendingTaskUpdate = localStorage.getItem(
+        `pendingTaskUpdate_${newTask._id}`
+      );
+      if (pendingTaskUpdate) {
+        const savedTask: Task = JSON.parse(pendingTaskUpdate);
+        try {
+          await updateTaskMutation.mutateAsync(savedTask);
+          localStorage.removeItem(`pendingTaskUpdate_${savedTask._id}`); // Clear the task from localStorage if successful
+          updateShowAlert([true, 'Task synced successfully', 'success']);
+        } catch (error) {
+          console.error('Error syncing task:', error);
+          updateShowAlert([true, 'Error syncing task', 'error']);
+        }
+      }
+    };
+
+    window.addEventListener('online', handleOnline);
+    return () => window.removeEventListener('online', handleOnline);
+  }, [newTask._id, updateTaskMutation, updateShowAlert]);
 
   return (
     <Backdrop
@@ -106,7 +125,7 @@ function UpdateTask({
           }}
           onClick={(e) => e.stopPropagation()}
         >
-          <Box component='form' onSubmit={handleSubmit}>
+          <Box component='form' onSubmit={(e) => e.preventDefault()}>
             <Typography variant='h6' m={2}>
               Update the task
             </Typography>
@@ -151,8 +170,8 @@ function UpdateTask({
               <Button
                 variant='contained'
                 color='primary'
-                type='submit'
-                disabled={updateTaskMutation.isLoading || uploading}
+                onClick={() => updateTaskMutation.mutate(newTask)}
+                disabled={updateTaskMutation.isLoading}
               >
                 Save
               </Button>

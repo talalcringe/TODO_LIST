@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useGetTasks } from '../api/taskQueries';
 
 import Filter from './Filter';
-import TaskView from './TaskView';
+// import TaskView from './TaskView';
+import TaskGroups from './TaskGroups';
 import CreateTask from './CreateTask';
 
 import Fab from '@mui/material/Fab';
@@ -85,7 +86,7 @@ function Tasks({
         } else if (!b.duedate) {
           return -1;
         } else {
-          return new Date(b.duedate).getTime() - new Date(a.duedate).getTime();
+          return new Date(a.duedate).getTime() - new Date(b.duedate).getTime();
         }
       }
     }) || [];
@@ -96,7 +97,14 @@ function Tasks({
   }
 
   return (
-    <>
+    <Box
+      height='90vh'
+      display='flex'
+      flexDirection='column'
+      alignItems={'center'}
+      justifyContent={'center'}
+      gap={2}
+    >
       <Filter
         search={search}
         filter={filter}
@@ -140,27 +148,31 @@ function Tasks({
       ) : filteredTasks && filteredTasks.length === 0 ? (
         <Typography variant='h5'>No tasks yet {`:)`}</Typography>
       ) : filteredTasks ? (
-        <Box
-          display={'flex'}
-          gap={2}
-          flexWrap={'wrap'}
-          alignItems={'center'}
-          justifyContent={'center'}
-        >
-          {sortedTasks.length === 0 ? (
-            <Typography variant='h5'>No tasks yet {`:)`}</Typography>
-          ) : (
-            sortedTasks.map((data: Task) => (
-              <TaskView
-                key={data._id}
-                {...data}
-                updateShowAlert={updateShowAlert}
-              />
-            ))
-          )}
-        </Box>
-      ) : null}
-    </>
+        <TaskGroups
+          sortedTasks={sortedTasks}
+          updateShowAlert={updateShowAlert}
+        />
+      ) : // <Box
+      //   display={'flex'}
+      //   gap={2}
+      //   flexWrap={'wrap'}
+      //   alignItems={'center'}
+      //   justifyContent={'center'}
+      // >
+      //   {sortedTasks.length === 0 ? (
+      //     <Typography variant='h5'>No tasks yet {`:)`}</Typography>
+      //   ) : (
+      //     sortedTasks.map((data: Task) => (
+      //       <TaskView
+      //         key={data._id}
+      //         {...data}
+      //         updateShowAlert={updateShowAlert}
+      //       />
+      //     ))
+      //   )}
+      // </Box>
+      null}
+    </Box>
   );
 }
 

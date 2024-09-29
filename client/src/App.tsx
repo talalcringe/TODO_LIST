@@ -22,7 +22,7 @@ function App() {
     <>
       <Box
         position={'fixed'}
-        height={'200vh'}
+        height={'100vh'}
         width={'100vw'}
         display='flex'
         flexDirection='column'
@@ -34,7 +34,7 @@ function App() {
         <Box
           position='fixed'
           width={'100%'}
-          height={'56px'}
+          height={'10vh'}
           zIndex={10}
           top={'0px'}
           bgcolor={'white'}

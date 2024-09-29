@@ -78,18 +78,20 @@ function TaskView({
     <>
       <Box mt={2}>
         <Tooltip title='Expand'>
-          <TaskCard
-            taskTitle={taskTitle}
-            description={description}
-            checked={checked}
-            duedate={duedate}
-            expanded={false}
-            updateTaskMutationLoading={updateTaskMutation.isLoading}
-            toggleUpdatingTask={toggleUpdatingTask}
-            handleCheckboxChange={handleCheckboxChange}
-            setDialogOpen={setDialogOpen}
-            handleCardClick={handleCardClick}
-          />
+          <Box>
+            <TaskCard
+              taskTitle={taskTitle}
+              description={description}
+              checked={checked}
+              duedate={duedate}
+              expanded={false}
+              updateTaskMutationLoading={updateTaskMutation.isLoading}
+              toggleUpdatingTask={toggleUpdatingTask}
+              handleCheckboxChange={handleCheckboxChange}
+              setDialogOpen={setDialogOpen}
+              handleCardClick={handleCardClick}
+            />
+          </Box>
         </Tooltip>
       </Box>
       <DeleteDialog
@@ -112,18 +114,20 @@ function TaskView({
           }}
           onClick={(e) => e.stopPropagation()}
         >
-          <TaskCard
-            taskTitle={taskTitle}
-            description={description}
-            checked={checked}
-            duedate={duedate}
-            expanded={true}
-            updateTaskMutationLoading={updateTaskMutation.isLoading}
-            toggleUpdatingTask={toggleUpdatingTask}
-            handleCheckboxChange={handleCheckboxChange}
-            setDialogOpen={setDialogOpen}
-            handleCardClick={handleCardClick}
-          />
+          <Box>
+            <TaskCard
+              taskTitle={taskTitle}
+              description={description}
+              checked={checked}
+              duedate={duedate}
+              expanded={true}
+              updateTaskMutationLoading={updateTaskMutation.isLoading}
+              toggleUpdatingTask={toggleUpdatingTask}
+              handleCheckboxChange={handleCheckboxChange}
+              setDialogOpen={setDialogOpen}
+              handleCardClick={handleCardClick}
+            />
+          </Box>
         </Modal>
       </Backdrop>
       <UpdateTask
