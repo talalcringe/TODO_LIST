@@ -76,7 +76,7 @@ function TaskView({
   const taskTitle = title;
   return (
     <>
-      <Box mt={2}>
+      <Box mx={2}>
         <Tooltip title='Expand'>
           <Box>
             <TaskCard
